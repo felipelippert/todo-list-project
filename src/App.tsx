@@ -1,8 +1,16 @@
+import SideBar from './containers/SideBar'
+import TaskList from './containers/TaskList'
+import GlobalStyle, { Container } from './styles'
+
 function App() {
   return (
-    <div className="App">
-      <h1>Hello, React</h1>
-    </div>
+    <>
+      <GlobalStyle />
+      <Container>
+        <SideBar />
+        <TaskList />
+      </Container>
+    </>
   )
 }
 
