@@ -1,8 +1,10 @@
 import { useDispatch } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import * as S from './styles'
-import { remove, edit } from '../../store/reducers/tasks'
+import { remove, edit, changeStatus } from '../../store/reducers/tasks'
 import TaskClass from '../../models/Task'
+import { Button, SaveButton } from '../../styles'
+import { Status } from '../../utils/enums/Task'
 
 type Props = TaskClass
 
@@ -28,9 +30,30 @@ const Task = ({
     setDescription(originalDescription)
   }
 
+  function changeTaskStatus(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.checked)
+    dispatch(
+      changeStatus({
+        id,
+        completed: event.target.checked
+      })
+    )
+  }
+
   return (
     <S.Card>
-      <S.Title>{title}</S.Title>
+      <label htmlFor={title}>
+        <input
+          onChange={changeTaskStatus}
+          checked={status === Status.COMPLETED}
+          type="checkbox"
+          id={title}
+        />
+        <S.Title>
+          {isEditing && <em>Editing: </em>}
+          {title}
+        </S.Title>
+      </label>
       <S.Tag parameter="priority" priority={priority}>
         {priority}
       </S.Tag>
@@ -45,7 +68,7 @@ const Task = ({
       <S.ActionBar>
         {isEditing ? (
           <>
-            <S.SaveButton
+            <SaveButton
               onClick={() => {
                 dispatch(
                   edit({
@@ -60,14 +83,14 @@ const Task = ({
               }}
             >
               Save
-            </S.SaveButton>
+            </SaveButton>
             <S.DeleteCancelButton onClick={cancelEdition}>
               Cancel
             </S.DeleteCancelButton>
           </>
         ) : (
           <>
-            <S.Button onClick={() => setIsEditing(true)}>Edit</S.Button>
+            <Button onClick={() => setIsEditing(true)}>Edit</Button>
             <S.DeleteCancelButton onClick={() => dispatch(remove(id))}>
               Delete
             </S.DeleteCancelButton>
